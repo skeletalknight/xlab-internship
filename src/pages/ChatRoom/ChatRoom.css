@@ -1,0 +1,161 @@
+.chat-room {
+    display: flex;
+    justify-content: flex-start;
+    align-items: left;
+    width: 1400px;
+    height: 640px;
+    border: 2px solid black;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: row;
+}
+.chat-list{
+    width: 30%;
+    height: 95%;
+    border-right: 2px solid black;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-list-header {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 5%;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc; 
+}
+.list-rows{
+    flex-direction:column;
+    height: 95%;
+    max-height: 95%;
+    overflow-y: auto;
+
+}
+.room-profile {
+    display: flex;
+    flex-direction:row;
+    align-items: center;
+    cursor: pointer; 
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.room-profile:hover {
+    background-color: #e7f7f8;
+}
+
+.initial-box {
+    width: 40px; /* 正方形盒子的宽度 */
+    height: 40px; /* 正方形盒子的高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff; /* 盒子背景色 */
+    color: white; /* 字体颜色 */
+    border-radius: 5px; /* 圆角 */
+    margin-right: 10px; /* 右侧间距 */
+    font-size: 16px; /* 字体大小 */
+}
+
+.room-name {
+    font-size: 16px; /* 房间名字体大小 */
+}
+
+.chat-display{
+    width: 70%;
+    height: 100%;
+    border-left: 2px solid black;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-title{
+    height: 10%; 
+    background-color: #efefef; 
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: left; 
+    display: flex; 
+    align-items: center; 
+    padding: 0 20px; 
+    font-size: 24px; 
+}
+
+.chat-content{
+    width: 100%;
+    height: 80%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    box-sizing: border-box;
+    background-color: #f5f5f5;
+}
+
+.chat-input{
+    height: 10%;
+    box-sizing: border-box;
+    border: 1px solid #fff9f9;
+    align-items: center; 
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.input-box{
+    width: 90%;
+    height: 80%;
+    box-sizing: border-box;
+    margin-right: 30px;
+}
+
+.chat-chain{
+    flex-direction: row;
+    display: flex;
+    width: 80%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+}
+
+.chain-avatar{
+    width: 40px; /* 正方形盒子的宽度 */
+    height: 40px; /* 正方形盒子的高度 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #b84848; /* 盒子背景色 */
+    color: white; /* 字体颜色 */
+    border-radius: 5px; /* 圆角 */
+    margin-right: 10px; /* 右侧间距 */
+    font-size: 16px; /* 字体大小 */
+}
+.username{
+    font-size: 16px;
+    margin-right: 10px;
+    font-style: italic;
+    margin-bottom: 10px;
+}
+.message-chain{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.messages{
+    display: flex;
+    width: fit-content;
+    max-width: 100%;
+    background-color: #ffffff;
+    border-radius: 5px;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+    padding: 0px 10px;
+}
+.message{
+    flex: 0 1 auto;
+    margin: 7px 0px;
+}
