@@ -1,0 +1,17 @@
+[
+  {
+    "roomId": 0,
+    "roomName": "try",
+    "lastMessage": null
+  },
+  {
+    "roomId": 1,
+    "roomName": "try_again",
+    "lastMessage": null
+  },
+  {
+    "roomId": 2,
+    "roomName": "testRoom",
+    "lastMessage": null
+  }
+]

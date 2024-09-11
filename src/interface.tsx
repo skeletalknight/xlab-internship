@@ -33,6 +33,7 @@ export interface RoomListRes {
 
 export interface RoomDeleteArgs {
   user:string;
+  roomId: number;
 }
 
 export interface MessageAddArgs {
