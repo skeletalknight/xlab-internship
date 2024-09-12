@@ -1,30 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import useSWR, { mutate }  from 'swr';
-import "./ChatRoom.css";
-import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import {createTRPCProxyClient, httpBatchLink } from '@trpc/client';
 import type { RoomRouter, MessageRouter} from '../../server';
 import * as inter from '../../interface'
 import Modal from './Modal/Modal';
+import "./ChatRoom.css";
 
 const API_URL = 'http://localhost:3000';
 
+//trpc client
 const room_trpc = createTRPCProxyClient<RoomRouter>({
   links: [
     httpBatchLink({
-      url: 'http://localhost:3000/api/room',
+      url: `${API_URL}/api/room`,
     }),
   ],
 });
 const message_trpc = createTRPCProxyClient<MessageRouter>({
   links: [
     httpBatchLink({
-      url: 'http://localhost:3000/api/message',
+      url: `${API_URL}/api/message`,
     }),
   ],
 });
 
 
+//connect with backend
 function roomListHook(){
   const {data, error} = useSWR("roomList", room_trpc.list.query, {refreshInterval: 300});
   let res = null;
@@ -62,6 +64,29 @@ async function click_DeleteRoom(userName:string, roomId:number){
   console.log(res);
 }
 
+
+//Create Roolist on the left row
+function RoomProfile({ value, onProfileClick, deleteClick }:
+  { value: string; onProfileClick: () => void; deleteClick: () => void }) {
+   const initial = value.charAt(0).toUpperCase(); 
+   return (
+   <div className="room-profile" onClick={onProfileClick}>
+       <div className="initial-box">
+         {initial}
+       </div>
+       <div className="room-name">
+         {value}
+       </div>
+       <button className="delete-room-button" onClick={(e) => {
+               e.stopPropagation();
+               deleteClick();
+           }}>
+               x
+       </button>
+     </div>
+   );
+ }
+
 function RoomList({user, changeRoom}:{user:string, changeRoom: (roomId:number|null) => void}) {
   const {roomlist, error} = roomListHook(); 
   if(roomlist){
@@ -74,8 +99,9 @@ function RoomList({user, changeRoom}:{user:string, changeRoom: (roomId:number|nu
             mutate("messageList");}} 
            deleteClick={async () => {
             await click_DeleteRoom(user, room.roomId);
-            changeRoom(null);
-            mutate("messageList");}}/>
+            mutate("messageList");
+            mutate("roomList");
+            changeRoom(null);}}/>
         ))}
       </div>
     );
@@ -85,27 +111,8 @@ function RoomList({user, changeRoom}:{user:string, changeRoom: (roomId:number|nu
   }
 }
 
-function RoomProfile({ value, onProfileClick, deleteClick }:
-   { value: string; onProfileClick: () => void; deleteClick: () => void }) {
-    const initial = value.charAt(0).toUpperCase(); 
-    return (
-    <div className="room-profile" onClick={onProfileClick}>
-        <div className="initial-box">
-          {initial}
-        </div>
-        <div className="room-name">
-          {value}
-        </div>
-        <button className="delete-room-button" onClick={(e) => {
-                e.stopPropagation();
-                deleteClick();
-            }}>
-                x
-        </button>
-      </div>
-    );
-  }
 
+//pop out the add-room modal
 function AddRoomModal({user, CloseModal}: {user:string, CloseModal: () => void}) {
   const [inputValue, setInputValue] = useState('');
   const handleSend = async () => {
@@ -135,6 +142,7 @@ function AddRoomModal({user, CloseModal}: {user:string, CloseModal: () => void})
 }
 
  
+//Create chat-room main content
 function ChatChain({ user, messages }: { user: string; messages: string[] }) {
     const initial = user.charAt(0).toUpperCase(); 
     return (
@@ -153,6 +161,7 @@ function ChatChain({ user, messages }: { user: string; messages: string[] }) {
       </div>
   );
 };
+
 function displayMessage({messagelist}:{messagelist: inter.Message[]}) {
   let result:{user:string, messages:string[]}[] = [];
   let user:string = messagelist[0].sender;
@@ -172,49 +181,50 @@ function displayMessage({messagelist}:{messagelist: inter.Message[]}) {
 }
 
 function ChatDispaly({RoomId,user}:{RoomId: number, user:string}) {
-    const [inputValue, setInputValue] = useState('');
-    const {roomlist} = roomListHook();
-    const roomName = roomlist?.find(room => room.roomId === RoomId)?.roomName || '';
-    const {messagelist} = messageListHook(RoomId);
-    const messagesDisplay = messagelist && messagelist.length > 0
-    ? displayMessage({messagelist}):<div></div>;
-    const handleSend = async () => {
-        if (inputValue.trim()) {
-          const req_AddMessage:inter.MessageAddArgs = {
-            roomId: RoomId,
-            content: inputValue,
-            sender: user
-          }
-          await message_trpc.add.mutate(req_AddMessage);
-          mutate("messageList");
-          setInputValue('');
+  const [inputValue, setInputValue] = useState('');
+  const {roomlist} = roomListHook();
+  const roomName = roomlist?.find(room => room.roomId === RoomId)?.roomName || '';
+  const {messagelist} = messageListHook(RoomId);
+  const messagesDisplay = messagelist && messagelist.length > 0
+  ? displayMessage({messagelist}):<div></div>;
+
+  const handleSend = async () => {
+      if (inputValue.trim()) {
+        const req_AddMessage:inter.MessageAddArgs = {
+          roomId: RoomId,
+          content: inputValue,
+          sender: user
         }
-      };
+        await message_trpc.add.mutate(req_AddMessage);
+        mutate("messageList");
+        setInputValue('');
+      }
+    };
 
-    
-    return (
-        <div className='chat-display'>
-          <div className='chat-title'>
-            {roomName}
-          </div>    
-          <div className='chat-content'>
-          {messagesDisplay}
-          </div>
-          <div className="chat-input">
-            <input
-              className="input-box"
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="输入消息..."
-            />
-            <button className='send-button' onClick={handleSend}>发送</button>
-          </div>
-        </div>
-      );
+  return (
+    <div className='chat-display'>
+      <div className='chat-title'>
+          {roomName}
+      </div>    
+      <div className='chat-content'>
+        {messagesDisplay}
+      </div>
+      <div className="chat-input">
+        <input
+          className="input-box"
+          type="text"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="输入消息..."
+        />
+        <button className='send-button' onClick={handleSend}>发送</button>
+      </div>
+    </div>
+    );
 };
-      
+  
 
+//Create hole page
 const ChatRoom = () => {
   const [RoomId, setRoom] = useState<number | null>(null);
   const [if_AddRoomModal, setAddRoomModal] = useState(false);
@@ -231,7 +241,7 @@ const ChatRoom = () => {
     reset_room();
   }
 
-  const displayRoom = RoomId ? <ChatDispaly RoomId={RoomId} user={userName}/> : <div>loading</div>;
+  const displayRoom = <ChatDispaly RoomId={RoomId} user={userName}/>;
   return (
     <div className="chat-room">
         <div className='chat-list'>

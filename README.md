@@ -1,50 +1,21 @@
-# React + TypeScript + Vite
+# Xlab进阶项目
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+项目为使用React+SWR+Trpc制作一个简单的聊天室
 
-Currently, two official plugins are available:
+## 配置设定
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+在`./src/server/db.ts`中填入数据库的信息
 
-## Expanding the ESLint configuration
+随后使用`yarn install`安装依赖
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## 项目启动
 
-- Configure the top-level `parserOptions` property like this:
+使用`yarn run dev`启动网页程序
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+使用`yarn run start`启动后端程序
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## 运行效果
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+![进阶项目演示视频.mp4_20240912_145709.712](post_content/README/进阶项目演示视频.mp4_20240912_145709.712.png)
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+![进阶项目演示视频.mp4_20240912_145936.013](post_content/README/进阶项目演示视频.mp4_20240912_145936.013.png)
